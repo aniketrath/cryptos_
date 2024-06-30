@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cryptos-react
+spec:
+  replicas: 2  # 2 replicas for development
+  selector:
+    matchLabels:
+      app: cryptos-react
+  template:
+    metadata:
+      labels:
+        app: cryptos-react
+      annotations:
+        # Add a dummy annotation to trigger an update
+        dummy.annotation: "force-update-{{ timestamp }}"
+    spec:
+      containers:
+      - name: cryptos-react
+        image: aniketrath/cryptos-frontend:2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cryptos-react-service
+spec:
+  type: NodePort
+  selector:
+    app: cryptos-react
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30001  # Custom port for accessing the app
