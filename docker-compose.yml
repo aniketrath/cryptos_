@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  backend:
+    container_name: cryptos-backend
+    image: aniketrath/cryptos-backend  
+    ports:
+      - "8000:8000"  
+    networks:
+      - cryptos-network
+
+  frontend:
+    container_name: cryptos-frontend
+    image: aniketrath/cryptos-frontend:1.0  
+    ports:
+      - "80:80"  # Adjust port mappings as needed
+    environment:
+      - REACT_APP_API_BASE_URL=http://cryptos-backend:8000  # Use backend container name to communicate
+    networks:
+      - cryptos-network
+networks:
+  cryptos-network:
